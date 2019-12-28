@@ -1,18 +1,47 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
+import Notification from './Notification/notification';
+import Searcher from './Searcher/searcher';
+
+import posts from './posts.json';
+
 class App extends Component {
+  state = {
+    posts: []
+  }
+
+  componentDidMount = () => {
+    this.setState({
+      posts,
+    });
+  }
+
+  onSearchHandler = (event) => {
+    const filteredPosts = posts.filter(post => post.content.includes(event.target.value));
+    this.setState({
+      posts: filteredPosts
+    });
+  }
   render() {
+    const notificationsView = this.state.posts.map((post) =>
+      <Notification
+        key={post.postId}
+        content={post.content}
+        date={post.date}
+        link={post.link}
+      />
+    )
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <h1 style={{
+          'color': 'white'
+        }}>JOB NOTIFICATIONS</h1>
+
+        <Searcher change={this.onSearchHandler} />
+        {
+          notificationsView
+        }
       </div>
     );
   }
